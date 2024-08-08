@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,3 +52,5 @@ Route::group(['middleware' => ['api', 'admin']], function() {
 //users routes
 Route::get('/products', [ProductController::class, 'allProducts']);
 Route::get('/products/{id}', [ProductController::class, 'productSingle']);
+Route::post('/addcart/{id}', [CartController::class, 'addToCart']);
+Route::get('/getcart', [CartController::class, 'getCart']);

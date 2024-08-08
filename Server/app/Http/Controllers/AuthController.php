@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\WishList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -66,6 +69,11 @@ class AuthController extends Controller
             ], 401);
         }
 
+        //store token in session
+        session()->put('jwt_token', $token);
+
+        $this->syncSessionToDatabase(auth()->user()->id);
+
         return $this->createNewToken($token);
     }
 
@@ -89,8 +97,48 @@ class AuthController extends Controller
     {
         auth()->logout();
 
+        session()->forget('jwt_token');
+
         return response()->json([
             'message' => 'user logged out'
         ]);
     }
+
+    public function syncSessionToDatabase($id)
+    {
+        $dataItem = WishList::getCart($id);
+
+        $sessionCart = Session::get('cart', []);
+
+        foreach($dataItem as $item)
+        {
+            if(isset($sessionCart[$item->product_id]))
+            {
+                $item->quantity = $sessionCart[$item->product_id]['quantity'];
+
+                $item->save();
+
+                unset($sessionCart[$item->product_id]);
+            }
+        }
+
+        foreach($sessionCart as $data)
+        {
+            WishList::create([
+                'product_id' => $data['product_id'],
+                'name' => $data['name'],
+                'user_id' => $id,
+                'quantity' => $data['quantity']
+            ]);
+        }
+
+        Session::forget('cart');
+    }
 }
+
+
+
+
+
+
+
