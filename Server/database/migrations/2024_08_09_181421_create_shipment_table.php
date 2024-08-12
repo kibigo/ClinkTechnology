@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wishlist', function (Blueprint $table) {
+        Schema::create('shipment', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('product_id');
             $table->string('name');
-            $table->tinyInteger('user_id');
-            $table->string('quantity');
+            $table->string('phone');
+            $table->string('country');
+            $table->string('city');
+            $table->string('address');
+            $table->string('price');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('wishlist');
+        Schema::dropIfExists('shipment');
     }
 };
