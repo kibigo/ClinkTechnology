@@ -3,7 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RegionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +46,17 @@ Route::group(['middleware' => ['api', 'admin']], function() {
 
     //products
     Route::post('/addproduct', [ProductController::class, 'addProduct']);
+
+
+    //regions
+    Route::post('/addregion', [RegionController::class, 'addRegion']);
+    Route::post('/editregion/{id}', [RegionController::class, 'editRegion']);
+    Route::delete('/deleteregion/{id}', [RegionController::class, 'deleteRegion']);
+
+    //destinations
+    Route::post('/adddestination', [DestinationController::class, 'addDestination']);
+    Route::post('/editdestination/{id}', [DestinationController::class, 'editDestination']);
+    Route::delete('/deletedestination/{id}', [DestinationController::class, 'delete']);
     
 });
 
@@ -54,3 +67,11 @@ Route::get('/products', [ProductController::class, 'allProducts']);
 Route::get('/products/{id}', [ProductController::class, 'productSingle']);
 Route::post('/addcart/{id}', [CartController::class, 'addToCart']);
 Route::get('/getcart', [CartController::class, 'getCart']);
+
+//regions
+Route::get('/getregion', [RegionController::class, 'getRegion']);
+
+
+//destination
+Route::get('/alldestination', [DestinationController::class, 'allDestination']);
+

@@ -29,8 +29,12 @@ class CartController extends Controller
                 ]);
             }
 
-            return response()->json([
-                'message' => 'Item not found'
+            WishList::create([
+                'product_id' => $dataItem->product_id,
+                'name' => $dataItem->name,
+                'user_id' => auth()->user()->id,
+                'price' => $dataItem->price,
+                'quantity' => 1
             ]);
         }
 

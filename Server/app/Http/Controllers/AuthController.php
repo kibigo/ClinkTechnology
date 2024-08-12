@@ -72,7 +72,10 @@ class AuthController extends Controller
         //store token in session
         session()->put('jwt_token', $token);
 
-        $this->syncSessionToDatabase(auth()->user()->id);
+        if(Session::has('cart'))
+        {
+            $this->syncSessionToDatabase(auth()->user()->id);
+        }
 
         return $this->createNewToken($token);
     }
@@ -124,12 +127,15 @@ class AuthController extends Controller
 
         foreach($sessionCart as $data)
         {
-            WishList::create([
-                'product_id' => $data['product_id'],
-                'name' => $data['name'],
-                'user_id' => $id,
-                'quantity' => $data['quantity']
-            ]);
+            $new = new WishList();
+
+            $new->product_id = $data['product_id'];
+            $new->name = $data['name'];
+            $new->user_id = $id;
+            $new->price = $data['price'];
+            $new->quantity = $data['quantity'];
+
+            $new->save();
         }
 
         Session::forget('cart');
