@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DestinationModel;
 use App\Models\Product;
 use App\Models\WishList;
 use Illuminate\Http\Request;
@@ -111,7 +112,8 @@ class CartController extends Controller
     }
 
 
-    public function getCart()
+
+    public function getCart(Request $request)
     {
         if(Auth::check())
         {
@@ -119,14 +121,74 @@ class CartController extends Controller
 
             $data = WishList::getCart($userId);
 
-            return response()->json($data);
+            $totalAmount = 0;
+
+            foreach($data as $item)
+            {
+                $amount = $item->price * $item->quantity;
+
+                $totalAmount += $amount;
+            }
+
+            if(!$request->destinationId)
+            {
+                $totalAmount += 0;
+            }
+
+            $destination = DestinationModel::find($request->destinationId);
+
+            if(!$destination)
+            {
+                return response()->json([
+                    'message' => 'Destination not found'
+                ]);
+            }
+
+            $destinationPrice = $destination->price;
+
+            $totalAmount += $destinationPrice;
+
+            return response()->json([
+                'data' => $data,
+                'total' => $totalAmount
+            ]);
         }
 
         else
         {
             $cart = Session::get('cart');
 
-            return response()->json($cart);
+            $totalAmount = 0;
+
+            foreach($cart as $item)
+            {
+                $amount = $item['price'] * $item['quantity'];
+
+                $totalAmount += $amount;
+            }
+
+            if(!$request->destinationId)
+            {
+                $totalAmount += 0;
+            }
+
+            $destination = DestinationModel::find($request->destinationId);
+
+            if(!$destination)
+            {
+                return response()->json([
+                    'message' => 'Destination not found'
+                ]);
+            }
+
+            $destinationPrice = $destination->price;
+
+            $totalAmount += $destinationPrice;
+
+            return response()->json([
+                'data' => $cart,
+                'total' => $totalAmount
+            ]);
         }
     }
 }

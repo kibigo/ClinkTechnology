@@ -66,7 +66,7 @@ Route::group(['middleware' => ['api', 'admin']], function() {
 Route::get('/products', [ProductController::class, 'allProducts']);
 Route::get('/products/{id}', [ProductController::class, 'productSingle']);
 Route::post('/addcart/{id}', [CartController::class, 'addToCart']);
-Route::get('/getcart', [CartController::class, 'getCart']);
+Route::post('/getcart', [CartController::class, 'getCart']);
 
 //regions
 Route::get('/getregion', [RegionController::class, 'getRegion']);
