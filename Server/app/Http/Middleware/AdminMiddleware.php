@@ -15,12 +15,15 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         if(auth()->user()->user_type == 0)
         {
             return $next($request);
         }
 
-        abort(403, 'Unauthorized');
+        return response()->json([
+            'error' => 'Unauthorized'
+        ], 403);
         
     }
 }

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('shipment', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('regionName');
+            $table->foreignId('orderId')->onDelete('cascade');
             $table->string('phone');
             $table->string('country');
             $table->string('city');

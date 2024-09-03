@@ -25,7 +25,7 @@ class Product extends Model
 
     static public function getProduct()
     {
-        $return = Product::select('products.*', 'images.path as image_url')
+        $return = self::select('products.*', 'images.path as image_url')
                             ->join('images', 'images.product_id', 'products.id')
                             ->where('products.is_delete', '=', 0)
                             ->get();
