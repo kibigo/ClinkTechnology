@@ -4,8 +4,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DestinationController;
+use App\Http\Controllers\MpesaController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,8 +31,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => 'api'], function($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/profile', [AuthController::class, 'profile']);
-    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/paylater', [MpesaController::class, 'payLater']);
 });
 
 
@@ -41,12 +45,13 @@ Route::group(['middleware' => ['api', 'admin']], function() {
     Route::get('/allusers', [AdminController::class, 'allUsers']);
     Route::get('/singleuser/{id}', [AdminController::class, 'singleUser']);
     Route::post('/createuser', [AdminController::class, 'createUser']);
-    Route::post('/updateuser/{id}', [AdminController::class, 'editUser']);
+    Route::post('/updateuser/{id}', [AdminController::class, 'updateUser']);
     Route::post('/delete/{id}', [AdminController::class, 'delete']);
 
     //products
     Route::post('/addproduct', [ProductController::class, 'addProduct']);
-
+    Route::post('/updateproduct', [ProductController::class, 'updateProduct']);
+    Route::delete('/deleteproduct/{id}', [ProductController::class, 'deleteProduct']);
 
     //regions
     Route::post('/addregion', [RegionController::class, 'addRegion']);
@@ -57,8 +62,23 @@ Route::group(['middleware' => ['api', 'admin']], function() {
     Route::post('/adddestination', [DestinationController::class, 'addDestination']);
     Route::post('/editdestination/{id}', [DestinationController::class, 'editDestination']);
     Route::delete('/deletedestination/{id}', [DestinationController::class, 'delete']);
+
+    //orders
+    Route::get('orders', [OrderController::class, 'order']);
+    //view items in the order, shipment details
+    Route::get('orders/{id}', [OrderController::class, 'singleOrderItems']);
+
+    //increase & decrease the quantity
+    Route::post('addquantity/{itemId}', [OrderController::class, 'addQuantity']);
+    Route::post('subtractquantity/{itemId}', [OrderController::class, 'subtractQuantity']);
+    
+    //delete orderItem, admin editing
+    Route::post('deleteOrderItem/{itemId}', [OrderController::class, 'delete']);
     
 });
+
+//users routes
+
 
 
 
@@ -74,4 +94,25 @@ Route::get('/getregion', [RegionController::class, 'getRegion']);
 
 //destination
 Route::get('/alldestination', [DestinationController::class, 'allDestination']);
+
+
+//pay later
+
+
+//mpesa
+// Route::post('/payments/initiatepush', [MpesaController::class, 'initiateStkPush']);
+// Route::post('/payments/stkcallback', [MpesaController::class, 'stkCallback']);
+
+
+Route::controller(MpesaController::class)
+->prefix('payments')
+->as('payments')
+->group(function(){
+    Route::get('token', 'token')->name('token');
+    Route::post('/initiatepush', 'initiateStkPush');
+    Route::post('stkcallback', 'stkCallback'); 
+    Route::get('/stkquery', 'stkQuery')->name('stkquery');
+});
+
+
 

@@ -55,7 +55,7 @@ class AdminController extends Controller
     }
 
 
-    public function editUser($id, Request $request)
+    public function updateUser($id, Request $request)
     {
         $user = User::find($id);
 
@@ -75,7 +75,7 @@ class AdminController extends Controller
 
         if($request->filled('password'))
         {
-            $requirements['password'] = 'required|min:8|confirmed|string';
+            $requirements['password'] = 'min:8|confirmed|string';
         }
 
         $validated_data = Validator::make($request->all(), $requirements);

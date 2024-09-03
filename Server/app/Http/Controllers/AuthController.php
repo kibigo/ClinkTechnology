@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -62,6 +63,19 @@ class AuthController extends Controller
 
         $token = auth()->attempt($validated_data->validated());
 
+
+        // $user = auth()->user();
+
+        // $otp = random_int(1000, 9999);
+
+        // if($user->user_type == 0)
+        // {
+        //     return response()->json([
+        //         'message' => 'This is admin, needs an authentication password',
+        //         'otp' => $otp
+        //     ]);
+        // }
+
         if(!$token)
         {
             return response()->json([
@@ -90,17 +104,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function profile()
-    {
-        return response()->json(auth()->user());
-    }
-
 
     public function logout()
     {
         auth()->logout();
 
-        session()->forget('jwt_token');
+        //session()->forget('jwt_token');
 
         return response()->json([
             'message' => 'user logged out'

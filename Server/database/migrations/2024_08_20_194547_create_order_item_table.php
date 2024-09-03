@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('orderId')->onDelete('cascade');
             $table->foreignId('productId')->onDelete('cascade');
             $table->string('price');
             $table->string('quantity');
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('order_item');
     }
 };
