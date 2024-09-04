@@ -111,96 +111,208 @@ const AdminOrder:React.FC = () => {
         setSearchQuery(e.target.value);
     };
   return (
-    <div style={{overflowX:'auto', overflowY:'auto', maxHeight:'750px'}}>
+    // <div style={{overflowX:'auto', overflowY:'auto', maxHeight:'750px'}}>
 
-        <div className='flex justify-between'>
-            <div className='text-2xl font-bold mt-5 ml-5'>
-                <h2>Orders Placed</h2>
-            </div>
+    //     <div className='flex justify-between'>
+    //         <div className='text-2xl font-bold mt-5 ml-5'>
+    //             <h2>Orders Placed</h2>
+    //         </div>
 
-            <div className='mt-5 mr-5'>
-                <a href='/admin/addcustomer'>
-                    <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Product</button>
-                </a>
-            </div>
-        </div>
+    //         <div className='mt-5 mr-5'>
+    //             <a href='/admin/addcustomer'>
+    //                 <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Product</button>
+    //             </a>
+    //         </div>
+    //     </div>
 
-        <div className='relative mt-5 ml-5'>
-            <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
-            <input type='text' placeholder='Search Email' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
-        </div>
+    //     <div className='relative mt-5 ml-5'>
+    //         <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
+    //         <input type='text' placeholder='Search Email' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
+    //     </div>
 
-        <table className='block divide-y text-sm text-left text-gray-500 w-1 lg:w-full'>
+    //     <table className='block divide-y text-sm text-left text-gray-500 w-1 lg:w-full'>
 
-            <thead className='sticky top-0 text-xs text-gray-700 uppercase bg-gray-50'>
-                <tr>
-                    <th className="px-4 py-3">Order ID</th>
-                    <th className="px-4 py-3">TotalPrice</th>
-                    <th className="px-4 py-3">Email</th>
-                    <th className="px-4 py-3">is Delivered</th>
-                    <th className="px-4 py-3">is Paid</th>
-                    <th className="px-4 py-3">
-                        <span >Actions</span>
-                    </th>
-                </tr>
-            </thead>
+    //         <thead className='sticky top-0 text-xs text-gray-700 uppercase bg-gray-50'>
+    //             <tr>
+    //                 <th className="px-4 py-3">Order ID</th>
+    //                 <th className="px-4 py-3">TotalPrice</th>
+    //                 <th className="px-4 py-3">Email</th>
+    //                 <th className="px-4 py-3">is Delivered</th>
+    //                 <th className="px-4 py-3">is Paid</th>
+    //                 <th className="px-4 py-3">
+    //                     <span >Actions</span>
+    //                 </th>
+    //             </tr>
+    //         </thead>
 
-            <tbody>
-                {currentProducts.map((order) => (
-                    <tr key={order.id} className='border-b'>
-                        <td className='px-4 py-3'>{order.id}</td>
-                        <td className='px-4 py-3'>{order.totalPrice}</td>
-                        <td className='px-4 py-3'>{order.email}</td>
-                        <td className='px-4 py-3'>
-                            {order.isDelivered == 0 ? 'False' : 'True'}
-                        </td>
-                        <td className='px-4 py-3'>
-                            {order.isPaid == 0 ? 'False' : 'True'}
-                        </td>
+    //         <tbody>
+    //             {currentProducts.map((order) => (
+    //                 <tr key={order.id} className='border-b'>
+    //                     <td className='px-4 py-3'>{order.id}</td>
+    //                     <td className='px-4 py-3'>{order.totalPrice}</td>
+    //                     <td className='px-4 py-3'>{order.email}</td>
+    //                     <td className='px-4 py-3'>
+    //                         {order.isDelivered == 0 ? 'False' : 'True'}
+    //                     </td>
+    //                     <td className='px-4 py-3'>
+    //                         {order.isPaid == 0 ? 'False' : 'True'}
+    //                     </td>
 
-                        <td className="px-4 py-3 items-center">
+    //                     <td className="px-4 py-3 items-center">
 
-                            <div className='flex gap-5 items-center'>
-                                <Link to={`/admin/updateorder/${order.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
-                                    <button>Edit</button>
-                                </Link>
-                                <button onClick={() => handleDelete(order.id)} className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
-                            </div>
+    //                         <div className='flex gap-5 items-center'>
+    //                             <Link to={`/admin/updateorder/${order.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+    //                                 <button>Edit</button>
+    //                             </Link>
+    //                             <button onClick={() => handleDelete(order.id)} className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
+    //                         </div>
 
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-            {loading && (
-                    <div className='absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-50'>
-                        <div className='bg-white p-4 rounded-lg'>
-                            <p className='text-3xl text-gray-800'>Loading...</p>
+    //                     </td>
+    //                 </tr>
+    //             ))}
+    //         </tbody>
+    //         {loading && (
+    //                 <div className='absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-50'>
+    //                     <div className='bg-white p-4 rounded-lg'>
+    //                         <p className='text-3xl text-gray-800'>Loading...</p>
+    //                     </div>
+    //                 </div>
+    //             )}
+    //     </table>
+
+    //     <nav style={{left:'50%'}} className='flex text-center fixed justify-center bottom-5 md:bottom-3'>
+    //         {totalPages > 1 && (
+
+    //             <ul className='flex gap-5 md:gap-10 items-center'>
+    //                 <li className={`${currentPage === 1 ? 'hidden' : ''}`}>
+    //                     <button onClick={() => handleClick(currentPage -1)}>Previous</button>
+    //                 </li>
+
+    //                 {[...Array(totalPages).keys()].map((page) => (
+    //                     <li key={page} className={`${currentPage === page + 1 ? 'active' : ''}`}>
+    //                         <button onClick={() => handleClick(page + 1)}>
+    //                             {page + 1}
+    //                         </button>
+    //                     </li>
+    //                 ))}
+    //                 <li className={`${currentPage === totalPages ? 'disabled' : ''}`}>
+    //                     <button onClick={() => handleClick(currentPage + 1)}>Next</button>
+    //                 </li>
+    //             </ul>
+    //         )}
+    //     </nav>
+    // </div>
+
+
+
+
+
+
+
+    <div className="flex flex-col overflow-x-auto">
+
+        <div className="sm:mx-6 lg:-mx-8">
+
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+
+                <div className="overflow-x-auto">
+
+                    <div className='flex justify-between'>
+                        <div className='text-2xl font-bold mt-5 ml-5'>
+                            <h2>Active Orders</h2>
+                        </div>
+
+                        <div className='mt-5 mr-5'>
+                            <a href='/admin/addcustomer'>
+                                <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Customer</button>
+                            </a>
                         </div>
                     </div>
-                )}
-        </table>
 
-        <nav style={{left:'50%'}} className='flex text-center fixed justify-center bottom-5 md:bottom-3'>
-            {totalPages > 1 && (
+                    <div className='relative mt-5 ml-5'>
+                        <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
+                        <input type='text' placeholder='Search' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
+                    </div>
 
-                <ul className='flex gap-5 md:gap-10 items-center'>
-                    <li className={`${currentPage === 1 ? 'hidden' : ''}`}>
-                        <button onClick={() => handleClick(currentPage -1)}>Previous</button>
-                    </li>
+                    <table className="w-full text-center text-sm font-light text-surface dark:text-white">
 
-                    {[...Array(totalPages).keys()].map((page) => (
-                        <li key={page} className={`${currentPage === page + 1 ? 'active' : ''}`}>
-                            <button onClick={() => handleClick(page + 1)}>
-                                {page + 1}
-                            </button>
-                        </li>
-                    ))}
-                    <li className={`${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button onClick={() => handleClick(currentPage + 1)}>Next</button>
-                    </li>
-                </ul>
-            )}
-        </nav>
+                        <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
+
+                            <tr>
+
+                                <th scope="col" className="px-6 py-4">Order ID</th>
+                                <th scope="col" className="px-6 py-4">Total Price</th>
+                                <th scope="col" className="px-6 py-4">Email</th>
+                                <th scope="col" className="px-6 py-4">Delivery Status</th>
+                                <th scope="col" className="px-6 py-4">Payment Status</th>
+                                <th scope="col" className="px-6 py-4">Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            {currentProducts.map((order) => (
+                                <tr key={order.id} className="border-b border-neutral-200 dark:border-white/10">
+                                    <td className="whitespace-nowrap px-6 py-4 font-medium">{order.id}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{order.totalPrice}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{order.email}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+                                        {order.isDelivered == 0 ? 'False' : 'True'}
+                                    </td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+                                        {order.isPaid == 0 ? 'False' : 'True'}
+                                    </td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+
+                                        <div className="flex gap-8 justify-center">
+                                            <Link to={`/admin/updateorder/${order.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                                <button>Edit</button>
+                                            </Link>     
+
+                                            <button onClick={() => handleDelete(order.id)} className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>                      
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+
+                        </tbody>
+
+                        {loading && (
+                            <div className='absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-50'>
+                                <div className='bg-white p-4 rounded-lg'>
+                                    <p className='text-3xl text-gray-800'>Loading...</p>
+                                </div>
+                            </div>
+                        )}
+                    </table>
+
+
+                    <nav style={{left:'50%'}} className='flex text-center fixed justify-center bottom-5 md:bottom-3'>
+                        {totalPages > 1 && (
+
+                                <ul className='flex gap-5 md:gap-10 items-center'>
+                                    <li className={`${currentPage === 1 ? 'hidden' : ''}`}>
+                                        <button onClick={() => handleClick(currentPage -1)}>Previous</button>
+                                    </li>
+
+                                {[...Array(totalPages).keys()].map((page) => (
+                                        <li key={page} className={`${currentPage === page + 1 ? 'active' : ''}`}>
+                                        <button onClick={() => handleClick(page + 1)}>
+                                                {page + 1}
+                                        </button>
+                                        </li>
+                                    ))}
+                                    <li className={`${currentPage === totalPages ? 'disabled' : ''}`}>
+                                    <button onClick={() => handleClick(currentPage + 1)}>Next</button>
+                                </li>
+                            </ul>
+                            )}
+                    </nav>
+
+                </div>
+                
+            </div>
+        </div>
     </div>
   )
 }

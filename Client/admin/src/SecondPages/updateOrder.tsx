@@ -1,235 +1,186 @@
 import axios from "axios";
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { useParams } from "react-router-dom";
-import Swal from "sweetalert2";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { getCookie } from "typescript-cookie";
 
 
-function UpdateOrder() {
+
+interface OrderItem{
+    id:number;
+    orderId:number;
+    name:string;
+    price:number;
+    quantity:number;
+}
 
 
+interface Shipment{
+    id:number;
+    orderId:number;
+    regionName:string;
+    phone:number;
+    country:string;
+    city:string;
+    address:string;
+    price:number;
+}
 
-    const initialFormData = {
-        id:"",
-        name:"",
-        description:"",
-        image_url:"",
-        price:"",
-        quantity:"",
-        category:"",
-    }
+const UpdateOrder:React.FC = () =>{
 
-    const {id} = useParams();
+    const [orderItem, setOrderItem] = useState<OrderItem[]>([]);
 
-    const [loading, setLoading] = useState(false);
-
-
-    const [formData, setFormData] = useState(initialFormData);
-
-    const [file, setFile] = useState<File | null>(null);
+    const [shipment, setShipment] = useState<Shipment | null>(null);
 
     const token = getCookie('jwt');
 
+    const {id} = useParams();
+
+
     useEffect(() => {
-        setLoading(true);
 
-        axios.get(`http://127.0.0.1:8000/api/orders/${id}`, {
-            headers:{
-                Authorization :`Bearer ${token}`
-            }
-        })
-        .then((response) => {
-            console.log(response.data);
-            setFormData(response.data.order[0]);
-            setLoading(false)
-        })
-        .catch((error) => {
-            console.error('Errorr fetching product id', error);
-            setLoading(false);
-        })
-    }, [id])
+        const fetchItems = async () => {
 
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const key = event.target.name;
-        const value = event.target.value;
-        setFormData({ ...formData, [key]: value});
-    };
-
-    const handleFileChange = (event:ChangeEvent<HTMLInputElement>) => {
-        if(event.target.files && event.target.files?.length > 0){
-          setFile(event.target.files[0]);
-        }
-    }
-
-    const handleTextArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        const key = event.target.name;
-        const value = event.target.value;
-        setFormData({ ...formData, [key]: value});
-    }
-
-    const handleSelect = (event:ChangeEvent<HTMLSelectElement>) => {
-        const key = event.target.name;
-        const value = event.target.value;
-        setFormData({ ...formData, [key]: value})
-    }
-
-    const handleUpdateProduct = async (event:FormEvent<HTMLFormElement>) => {
-        
-        event.preventDefault();
-
-        setLoading(true);
-
-        const data = new FormData();
-        data.append("id", formData.id);
-        data.append("name", formData.name);
-        data.append("description", formData.description);
-        data.append("price", formData.price);
-        data.append("quantity", formData.quantity);
-        data.append("category", formData.category);
-
-        if(file){
-          data.append("file", file);
-          console.log("FIle details: ", file);
-        }
-
-        //const hasFile = data.has('file');
-
-        //console.log("Data from front", (formData));
-        
-        try{
-            const response = await axios.post('http://127.0.0.1:8000/api/updateproduct', data, {
-                headers:{
-                    Authorization :`Bearer ${token}`,
-                    'Content-Type':'multipart/form-data'
-                }
-            });
-
-            Swal.fire({
-                title:'Update',
-                text:response.data.message,
-                icon:'success'
-            });
-            
-            console.log(response);
-            //setFormData(initialFormData);
-            setLoading(false);
-
-        }catch(error: unknown){
-            console.log('Error updating product details', error);
-            setLoading(false);
-
-            if(axios.isAxiosError(error)){
-                Swal.fire({
-                    icon:"error",
-                    title:"Ooops...",
-                    text:error.response?.data.message
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/orders/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
+                console.log(response.data)
+                console.log(typeof(response.data.shipment))
+                setOrderItem(response.data.order);
+                setShipment(response.data.shipment);
+            } catch (error) {
+                console.error('Error fetching orderItems:', error);
             }
-            else if(error instanceof Error){
-                Swal.fire({
-                    icon:"error",
-                    title:"Ooops...",
-                    text:error.message
-                });
-            }else{
-                Swal.fire({
-                    icon:"error",
-                    title:"Ooops...",
-                    text:"Unexpected error occurred"
-                });
-            }
+        };
 
-        }
-    }
-
-
+        fetchItems();
+    }, [token]);
 
   return (
+    <>
+    <div className="flex flex-col overflow-x-auto">
 
-    <div className="flex flex-col items-center overflow-auto h-screen">
+        <div className="sm:mx-6 lg:-mx-8">
 
-        <div className="w-3/4 md:w-1/2">
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
 
-            <h3 className="text-3xl text-cyan-900 font-bold">Edit Product Details</h3>
-            <h4 className="text-xl text-gray-500 mt-4">Please enter details</h4>
+                <div className="overflow-x-auto">
 
+                    <div className="w-full border-b">
+                        <h2 className="text-2xl font-semibold ml-3 text-slate-800">Order Items</h2>
+                    </div>
 
-            <form className="space-y-4" onSubmit={handleUpdateProduct} encType="multipart/form-data">
+                    <table className="w-3/4 text-center text-sm font-light text-surface dark:text-white">
+
+                        <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
+
+                            <tr>
+
+                                <th scope="col" className="px-6 py-4">Order Id</th>
+                                <th scope="col" className="px-6 py-4">Name</th>
+                                <th scope="col" className="px-6 py-4">Price</th>
+                                <th scope="col" className="px-6 py-4">Quantity</th>
+                                <th scope="col" className="px-6 py-4">Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            {orderItem.map((item) => (
+                                <tr key={item.id} className="border-b border-neutral-200 dark:border-white/10">
+                                    <td className="whitespace-nowrap px-6 py-4 font-medium">{item.orderId}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{item.price}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{item.quantity}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+
+                                        <div className="flex gap-8 justify-center">
+                                            <Link to={`/admin/updateitem/${item.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                                <button>Edit</button>
+                                            </Link>
+
+                                            <button className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+
+                        </tbody>
+                    </table>
+                </div>
                 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">ID</label>
-                    <div className="mt-2">
-                        <input name="id" value={formData.id} type="number" required className="w-full rounded-xl border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Name</label>
-                    <div className="mt-2">
-                        <input name="name" value={formData.name} onChange={handleChange} type="name" required className="w-full rounded-xl border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Description</label>
-                    <div className="mt-2">
-                        <textarea name="description" value={formData.description} onChange={handleTextArea} placeholder="Maximum 255 characters" className="w-full h-32 rounded-xl border-2 border-zinc-950 indent-5 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Product Image</label>
-                    <div className="mt-2">
-                        <input name="file" onChange={handleFileChange} type="file" className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Price</label>
-                    <div className="mt-1">
-                        <input name="price" value={formData.price} onChange={handleChange} type="number" required className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Quantity</label>
-                    <div className="mt-1">
-                        <input name="quantity" value={formData.quantity} onChange={handleChange} type="number" required className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
-                </div>
-
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Category</label>
-                    <div className="mt-1">
-                       
-                        <select name="category_id" value={formData.category} onChange={handleSelect} className="w-1/2 py-1 text-gray-900 shadow-sm">
-                            <option value="">Category</option>
-                            <option value="0">Computer Accessories</option>
-                            <option value="1">Development Platform</option>
-                            <option value="2">Aeronautics and Robotics</option>
-                            <option value="3">Battery and Chargers</option>
-                            <option value="4">Electronic Components</option>
-                        </select>
-                    </div>
-                </div>
-
-
-                <div className="text-center">
-                    <button type="submit" className="rounded-md px-10 bg-blue-600 font-semibold hover:bg-green-900 cursor-pointer text-white text-2xl">Save</button>
-                </div>
-
-            </form>
-
-        </div>
-        {loading && (
-            <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <p className="text-lg font-semibold">Loading...</p>
-                </div>
             </div>
-        )}
+        </div>
     </div>
+
+
+
+{/* DESTINATION TABLE */}
+
+
+    <div className="flex flex-col overflow-x-auto mt-40">
+
+        <div className="sm:mx-6 lg:-mx-8">
+
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+
+                <div className="overflow-x-auto">
+
+                    <div className="w-full border-b">
+                        <h2 className="text-2xl font-semibold ml-3 text-slate-800">Shipment</h2>
+                    </div>
+
+                    <table className="w-3/4 text-center text-sm font-light text-surface dark:text-white">
+
+                        <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
+
+                            <tr>
+
+                                <th scope="col" className="px-6 py-4">Order Id</th>
+                                <th scope="col" className="px-6 py-4">Region Name</th>
+                                <th scope="col" className="px-6 py-4">Country</th>
+                                <th scope="col" className="px-6 py-4">City</th>
+                                <th scope="col" className="px-6 py-4">Address</th>
+                                <th scope="col" className="px-6 py-4">Price</th>
+                                <th scope="col" className="px-6 py-4">Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {shipment && (
+
+                                <tr className="border-b border-neutral-200 dark:border-white/10">
+                                    <td className="whitespace-nowrap px-6 py-4 font-medium">{shipment.orderId}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{shipment.regionName}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{shipment.country}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{shipment.city}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{shipment.address}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{shipment.price}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+
+                                        <div className="flex gap-8 justify-center">
+                                            <Link to={`/admin/updateitem/${shipment.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                                <button>Edit</button>
+                                            </Link>
+
+                                            <button className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    </>
   )
 }
 

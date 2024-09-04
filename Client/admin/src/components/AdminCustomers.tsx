@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import {HiOutlineSearch } from 'react-icons/hi'
-import { FiEdit } from "react-icons/fi";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -101,76 +99,87 @@ const AdminCustomers: React.FC = () => {
     };
 
   return (
-    <div className="overflow-x-auto overflow-y-auto">
 
-        <div className='flex justify-between'>
+    <div className="flex flex-col overflow-x-auto">
 
-            <div className='text-2xl font-bold mt-5 ml-5'>
-                <h2>Active Customers</h2>
-            </div>
+        <div className="sm:mx-6 lg:-mx-8">
 
-            <div className='mt-5 mr-5'>
-                <a href='/admin/addcustomer'>
-                    <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Customer</button>
-                </a>
-            </div>
-        </div>
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
 
-        <div className='relative mt-5 ml-5'>
-            <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
-            <input type='text' placeholder='Search' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
-        </div>
+                <div className="overflow-x-auto">
 
-        <table className="block text-gray-500 text-center w-1 h-[46rem]">
+                    <div className='flex justify-between'>
+                        <div className='text-2xl font-bold mt-5 ml-5'>
+                            <h2>Active Customers</h2>
+                        </div>
 
-            <thead className="sticky top-0 text-gray-700 uppercase">
 
-                <tr>
-                    <th className="px-5 py-3">User_ID</th>
-                    <th className="px-5 py-3">First Name</th>
-                    <th className="px-5 py-3">Second Name</th>
-                    <th className="px-5 py-3">Email</th>
-                    <th className="px-5 py-3">Created_at</th>
-                    <th className="px-5 py-3">Updated_at</th>
-                    <th className='px-5 py-3'>
-                        <span>Actions</span>
-                    </th>
-                </tr>
-            </thead>
+                        <div className='mt-5 mr-5'>
+                            <a href='/admin/addcustomer'>
+                                <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Customer</button>
+                            </a>
+                        </div>
+                    </div>
 
-            <tbody>
-                {users.map((user) => (
-                    <tr key={user.id} className='border-b'>
-                        <td className='px-4 py-3'>{user.id}</td>
-                        <td className='px-4 py-3'>{user.first_name}</td>
-                        <td className='px-4 py-3'>{user.last_name}</td>
-                        <td className='px-4 py-3'>{user.email}</td>
-                        <td className='px-4 py-3'>{formatDate(user.created_at)}</td>
-                        <td className='px-4 py-3'>{formatDate(user.updated_at)}</td>
-                        <td className='px-6 py-3 flex gap-10'>
-                            <Link to={`/admin/userdetails/${user.id}`} className='flex bg-green-600 items-center justify-center gap-2 w-20 h-8 rounded-md'>
-                                <FiEdit className='text-white'/> 
-                                <button className='text-white'>Edit</button>
-                            </Link>
+                    <div className='relative mt-5 ml-5'>
+                        <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
+                        <input type='text' placeholder='Search' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
+                    </div>
 
-                            <div className='flex bg-red-600 items-center justify-center gap-2 w-20 h-8 rounded-md'>
-                                <RiDeleteBin6Line className='text-white'/> 
-                                <button onClick={() => handleDelete(user.id)} className='text-white'>Delete</button>
+                    <table className="w-full text-center text-sm font-light text-surface dark:text-white">
+
+                        <thead className="border-b border-neutral-200 font-medium dark:border-white/10">
+
+                            <tr>
+
+                                <th scope="col" className="px-6 py-4">User ID</th>
+                                <th scope="col" className="px-6 py-4">First Name</th>
+                                <th scope="col" className="px-6 py-4">Second Name</th>
+                                <th scope="col" className="px-6 py-4">Email</th>
+                                <th scope="col" className="px-6 py-4">Created At</th>
+                                <th scope="col" className="px-6 py-4">Updated At</th>
+                                <th scope="col" className="px-6 py-4">Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id} className="border-b border-neutral-200 dark:border-white/10">
+                                    <td className="whitespace-nowrap px-6 py-4 font-medium">{user.id}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{user.first_name}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{user.last_name}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{user.email}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{formatDate(user.created_at)}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">{formatDate(user.updated_at)}</td>
+                                    <td className="whitespace-nowrap px-6 py-4">
+
+                                        <div className="flex gap-8 justify-center">
+                                            <Link to={`/admin/userdetails/${user.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                                <button>Edit</button>
+                                            </Link>     
+
+                                            <button onClick={() => handleDelete(user.id)} className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>                      
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+
+                        </tbody>
+
+                        {loading && (
+                            <div className='absolute inset-0 flex justify-center items-center bg-gray-100 bg-opacity-50'>
+                                <div className='bg-white p-4 rounded-lg'>
+                                    <p className='text-3xl text-gray-800'>Loading...</p>
+                                </div>
                             </div>
-                            
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
+                        )}
+                    </table>
 
-            {loading && (
-                <tfoot>
-                    <tr>
-                        <td colSpan={6} className='text-center text-2xl p-4'>Loading...</td>
-                    </tr>
-                </tfoot>
-            )}
-        </table>
+                </div>
+                
+            </div>
+        </div>
     </div>
   )
 }

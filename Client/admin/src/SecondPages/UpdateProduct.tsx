@@ -157,50 +157,43 @@ function UpdateProduct() {
 
             <form className="space-y-4" onSubmit={handleUpdateProduct} encType="multipart/form-data">
                 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">ID</label>
-                    <div className="mt-2">
-                        <input name="id" value={formData.id} type="number" required className="w-full rounded-xl border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">ID</label>
+                    <input name="id" value={formData.id} type="number" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Name</label>
-                    <div className="mt-2">
-                        <input name="name" value={formData.name} onChange={handleChange} type="name" required className="w-full rounded-xl border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Name</label>
+                    <input name="name" value={formData.name} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Description</label>
-                    <div className="mt-2">
-                        <textarea name="description" value={formData.description} onChange={handleTextArea} placeholder="Maximum 255 characters" className="w-full h-32 rounded-xl border-2 border-zinc-950 indent-5 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Description</label>
+                    <textarea name="description" value={formData.description} onChange={handleTextArea} placeholder="Maximum 255 characters" className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Product Image</label>
-                    <div className="mt-2">
-                        <input name="file" onChange={handleFileChange} type="file" className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Product Image</label>
+                    <input name="file" onChange={handleFileChange} type="file" className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+        
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Price</label>
-                    <div className="mt-1">
-                        <input name="price" value={formData.price} onChange={handleChange} type="number" required className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Price</label>
+                    <input name="price" value={formData.price} onChange={handleChange} type="number" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Quantity</label>
-                    <div className="mt-1">
-                        <input name="quantity" value={formData.quantity} onChange={handleChange} type="number" required className="w-full rounded-md border-2 border-zinc-950 indent-3 text-gray-900 shadow-sm py-1.5"/>
-                    </div>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Quantity</label>
+                    <input name="quantity" value={formData.quantity} onChange={handleChange} type="number" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
                 </div>
 
-                <div className="mt-1">
-                    <label className="block text-sm font-medium text-gray-600">Category</label>
+                <div className="mt-1 mb-6">
+                    <label className="block text-sm mb-2 font-medium text-gray-600">Category</label>
                     <div className="mt-1">
                        
                         <select name="category_id" value={formData.category} onChange={handleSelect} className="w-1/2 py-1 text-gray-900 shadow-sm">
