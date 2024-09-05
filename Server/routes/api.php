@@ -8,6 +8,7 @@ use App\Http\Controllers\MpesaController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,13 @@ Route::group(['middleware' => ['api', 'admin']], function() {
     Route::get('orders', [OrderController::class, 'order']);
     //view items in the order, shipment details
     Route::get('orders/{id}', [OrderController::class, 'singleOrderItems']);
+    //single order item
+    Route::get('orderitem/{id}', [OrderController::class, 'singleItem']);
+    Route::post('updateorderitem/{id}', [OrderController::class, 'updateSingleItem']);
+    Route::delete('deleteorderitem/{id}', [OrderController::class, 'deleteOrderItem']);
+
+    //Shipment
+    Route::get('shipment/{id}', [ShipmentController::class, 'getShipment']);
 
     //increase & decrease the quantity
     Route::post('addquantity/{itemId}', [OrderController::class, 'addQuantity']);

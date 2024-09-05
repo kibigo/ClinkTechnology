@@ -11,6 +11,10 @@ import AdminOrder from "./components/AdminOrder";
 import AddProduct from "./SecondPages/AddProduct";
 import UpdateProduct from "./SecondPages/UpdateProduct";
 import UpdateOrder from "./SecondPages/updateOrder";
+import UpdateOrderItem from "./SecondPages/UpdateOrderItem";
+import UpdateShipment from "./SecondPages/UpdateShipment";
+import UpdateUser from "./SecondPages/UpdateUser";
+import AddCustomer from "./SecondPages/AddCustomer";
 
 function App() {
 
@@ -34,11 +38,15 @@ function App() {
           >
             <Route index element={<AdminHome />} />
             <Route path="admin/customers" element={<AdminCustomers />} />
+            <Route path="admin/customers/updatecustomer/:id" element={<UpdateUser/>}/>
+            <Route path="admin/customers/addcustomer" element={<AddCustomer />}/>
             <Route path="admin/products" element={<AdminProduct />} />
             <Route path="admin/orders" element={<AdminOrder />} />
-            <Route path="admin/addproduct" element={<AddProduct />} />
-            <Route path="admin/updateproduct/:id" element={<UpdateProduct />}/>
-            <Route path="admin/updateorder/:id" element={<UpdateOrder/>}/>
+            <Route path="admin/products/addproduct" element={<AddProduct />} />
+            <Route path="admin/products/updateproduct/:id" element={<UpdateProduct />}/>
+            <Route path="admin/orders/updateorder/:id" element={<UpdateOrder/>}/>
+            <Route path="admin/orders/updateorderitem/:id" element={<UpdateOrderItem/>}/>
+            <Route path="admin/orders/updateshipment/:id" element={<UpdateShipment/>}/>
           </Route>
         </Routes>
       </UserProvider>

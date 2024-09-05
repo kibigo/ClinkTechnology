@@ -42,7 +42,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      await new Promise ((resolve) => setTimeout(resolve, 1000));
+      await new Promise ((resolve) => setTimeout(resolve));
 
       const token = Cookies.get('jwt'); // Get the token from cookies
       if (!token) {
