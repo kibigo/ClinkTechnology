@@ -69,7 +69,7 @@ function Sidebar() {
 
         <div className="flex-1">
           {Dashboard_Above_Links.map((item) => (
-            <Link to={item.path} className={classNames(pathname === item.path ? 'text-white' :  "text-black", linkStyles)}>
+            <Link to={item.path} className={classNames(pathname.startsWith(item.path) ? 'text-white' :  "text-black", linkStyles)}>
               <span>{item.icon}</span>
               {item.label}
             </Link>
@@ -79,7 +79,7 @@ function Sidebar() {
 
         <div>
           {Dashboard_Bottom_Links.map((item) => (
-            <Link to={item.path} className={classNames(pathname === item.path ? 'text-white' :  "text-black", linkStyles)}>
+            <Link to={item.path} className={classNames(pathname.startsWith(item.path)? 'text-white' :  "text-black", linkStyles)}>
               <span>{item.icon}</span>
               {item.label}
             </Link>

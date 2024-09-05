@@ -115,7 +115,7 @@ const AdminCustomers: React.FC = () => {
 
 
                         <div className='mt-5 mr-5'>
-                            <a href='/admin/addcustomer'>
+                            <a href='/admin/customers/addcustomer'>
                                 <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Customer</button>
                             </a>
                         </div>
@@ -155,7 +155,7 @@ const AdminCustomers: React.FC = () => {
                                     <td className="whitespace-nowrap px-6 py-4">
 
                                         <div className="flex gap-8 justify-center">
-                                            <Link to={`/admin/userdetails/${user.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                            <Link to={`/admin/customers/updatecustomer/${user.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
                                                 <button>Edit</button>
                                             </Link>     
 

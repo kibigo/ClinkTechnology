@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getCookie } from "typescript-cookie";
+import Swal from 'sweetalert2';
 
 
 
@@ -46,8 +47,8 @@ const UpdateOrder:React.FC = () =>{
                         Authorization: `Bearer ${token}`
                     }
                 });
-                console.log(response.data)
-                console.log(typeof(response.data.shipment))
+                // console.log(response.data)
+                // console.log(typeof(response.data.shipment))
                 setOrderItem(response.data.order);
                 setShipment(response.data.shipment);
             } catch (error) {
@@ -57,6 +58,31 @@ const UpdateOrder:React.FC = () =>{
 
         fetchItems();
     }, [token]);
+
+
+
+    const handleDelete = (id: number) => {
+        
+        axios.delete(`http://127.0.0.1:8000/api/deleteorderitem/${id}`,{
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(() => {
+
+            const updatedProducts = orderItem.filter(item => item.id !== id);
+            console.log("delete response",updatedProducts);
+            setOrderItem(updatedProducts);
+
+            Swal.fire({
+                title:'delete',
+                text:'Product deleted',
+                icon:'success'
+            });
+
+            //return response.data;
+        })
+    }
 
   return (
     <>
@@ -97,11 +123,11 @@ const UpdateOrder:React.FC = () =>{
                                     <td className="whitespace-nowrap px-6 py-4">
 
                                         <div className="flex gap-8 justify-center">
-                                            <Link to={`/admin/updateitem/${item.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                            <Link to={`/admin/orders/updateorderitem/${item.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
                                                 <button>Edit</button>
                                             </Link>
 
-                                            <button className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
+                                            <button onClick={() => handleDelete(item.id)} className='text-center bg-red-500 text-black w-12 h-8 rounded-md'>Delete</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -163,7 +189,7 @@ const UpdateOrder:React.FC = () =>{
                                     <td className="whitespace-nowrap px-6 py-4">
 
                                         <div className="flex gap-8 justify-center">
-                                            <Link to={`/admin/updateitem/${shipment.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
+                                            <Link to={`/admin/orders/updateshipment/${shipment.id}`} className='flex text-center justify-center bg-green-600 text-black w-12 h-8 rounded-md'>
                                                 <button>Edit</button>
                                             </Link>
 
