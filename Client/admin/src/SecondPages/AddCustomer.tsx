@@ -18,7 +18,7 @@ function AddCustomer() {
         email:"",
         phone_number:"",
         password:"",
-        confirm_password:"",
+        password_confirmation:"",
         user_type:""
     };
 
@@ -48,16 +48,18 @@ function AddCustomer() {
         setLoading(true);
 
         try {
-            await axios.post('http://127.0.0.1:8000/api/addproduct', formData, {
+            await axios.post('http://127.0.0.1:8000/api/createuser', formData, {
                 headers: {
-                  'Content-Type' : 'multipart/form-data',
+                  'Content-Type' : 'application/json',
                   Authorization :`Bearer ${token}`
                 }
             });
 
+            console.log(formData);
+
             Swal.fire({
-                title:"Product added",
-                text:"Product added",
+                title:"User added",
+                text:"User added",
                 icon:"success"
             });
             setFormData(initialFormData);
@@ -66,11 +68,27 @@ function AddCustomer() {
 
         } catch (error) {
             console.log(error);
-            Swal.fire({
-                icon:"error",
-                title:"Ooops...",
-                text:"Something went wrong"
-            });
+
+            if(axios.isAxiosError(error)){
+                Swal.fire({
+                    icon:"error",
+                    title:"Ooops...",
+                    text:error.response?.data.message
+                });
+            }
+            else if(error instanceof Error){
+                Swal.fire({
+                    icon:"error",
+                    title:"Ooops...",
+                    text:error.message
+                });
+            }else{
+                Swal.fire({
+                    icon:"error",
+                    title:"Ooops...",
+                    text:"Unexpected error occurred"
+                });
+            }
         
         } finally {
             setLoading(false);
@@ -120,14 +138,14 @@ function AddCustomer() {
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm font-medium text-gray-600">Confirm Password</label>
-                    <input name="confirm_password" value={formData.confirm_password} onChange={handleChange} type="password" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="password_confirmation" value={formData.password_confirmation} onChange={handleChange} type="password" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
                 </div>
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm font-medium text-gray-600">Category</label>
                     <div className="mt-1">
                        
-                        <select name="category" value={formData.user_type} onChange={handleSelect} className="w-1/2 py-1 text-gray-900 shadow-sm">
+                        <select name="user_type" value={formData.user_type} onChange={handleSelect} className="w-1/2 py-1 text-gray-900 shadow-sm">
                             <option value="">User Type</option>
                             <option value="0">Admin</option>
                             <option value="1">Customer</option>
