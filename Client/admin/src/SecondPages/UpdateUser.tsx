@@ -37,7 +37,7 @@ function UpdateUser() {
             }
         })
         .then((response) => {
-            console.log(response.data);
+            //console.log(response.data);
             setFormData(response.data);
             setLoading(false)
         })
@@ -63,7 +63,7 @@ function UpdateUser() {
         setLoading(true);
 
         try{
-            const response = await axios.post(`http://127.0.0.1:8000/api/updateorderitem/${id}`, formData, {
+            const response = await axios.post(`http://127.0.0.1:8000/api/updateuser/${id}`, formData, {
                 headers:{
                     Authorization :`Bearer ${token}`,
                     'Content-Type':'application/json'
@@ -76,7 +76,7 @@ function UpdateUser() {
                 icon:'success'
             });
             
-            console.log(response);
+            //console.log(response);
             //setFormData(initialFormData);
             setLoading(false);
 
@@ -125,32 +125,32 @@ function UpdateUser() {
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm mb-2 font-medium text-gray-600">First Name</label>
-                    <input name="name" value={formData.first_name} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="first_name" value={formData.first_name} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
 
                 </div>
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm mb-2 font-medium text-gray-600">Last Name</label>
-                    <input name="name" value={formData.last_name} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="last_name" value={formData.last_name} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
 
                 </div>
 
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm mb-2 font-medium text-gray-600">Email</label>
-                    <input name="name" value={formData.email} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="email" value={formData.email} onChange={handleChange} type="email" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
 
                 </div>
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm mb-2 font-medium text-gray-600">Phone</label>
-                    <input name="price" value={formData.phone_number} onChange={handleChange} type="number" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="phone_number" value={formData.phone_number} onChange={handleChange} type="number" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
 
                 </div>
 
                 <div className="mt-1 mb-6">
                     <label className="block text-sm mb-2 font-medium text-gray-600">Password</label>
-                    <input name="name" value={formData.password} onChange={handleChange} type="name" required className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
+                    <input name="password" value={formData.password} onChange={handleChange} type="password" className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"/>
 
                 </div>
 

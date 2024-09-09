@@ -94,10 +94,12 @@ class AdminController extends Controller
         }
 
         $user->update($validated_data);
+        
 
 
         return response()->json([
-            'message' => 'User updated'
+            'message' => 'User updated',
+            //'data' => $validated_data
         ]);
     }
 

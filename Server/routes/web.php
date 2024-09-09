@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Upload;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/invoice/{orderId}', [OrderController::class, 'viewInvoice']);

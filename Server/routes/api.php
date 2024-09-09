@@ -124,3 +124,4 @@ Route::controller(MpesaController::class)
 
 
 
+Route::get('invoice/{id}', [OrderController::class, 'viewInvoice']);

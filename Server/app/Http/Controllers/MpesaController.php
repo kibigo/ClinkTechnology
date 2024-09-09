@@ -40,9 +40,9 @@ class MpesaController extends Controller
         $TransactionType = 'CustomerPayBillOnline';
         $Amount = 1;
         //$phone = ltrim($request->phoneNumber, '0'); //Triming '0' in phone number
-        $PartyA = 254741103848;
+        $PartyA = 254724134368;
         $PartyB = 174379;
-        $PhoneNumber = 254741103848;
+        $PhoneNumber = 254724134368;
         $callbackUrl = "https://stupid-pets-attack.loca.lt/payments/stkcallback";
         $AccountReference = 'Clink Tech';
         $TransactionDesc = 'Payment for goods';

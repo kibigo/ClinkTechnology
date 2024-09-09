@@ -79,6 +79,25 @@ class OrderController extends Controller
     }
 
 
+    public function viewInvoice($orderId)
+    {
+        $order = Order::getInvoice($orderId);
+
+        if(!$order)
+        {
+            return response()->json([
+                'message' => 'Order not found'
+            ]);
+        }
+
+        return view('invoice.generate_invoice', compact('order'));
+
+        // $order = Order::getInvoice($orderId);
+        // return response()->json($order);
+
+    }
+
+
     public function delete($itemId)
     {
         $item =OrderItem::find($itemId);
