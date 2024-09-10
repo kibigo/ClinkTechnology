@@ -15,6 +15,7 @@ import UpdateOrderItem from "./SecondPages/UpdateOrderItem";
 import UpdateShipment from "./SecondPages/UpdateShipment";
 import UpdateUser from "./SecondPages/UpdateUser";
 import AddCustomer from "./SecondPages/AddCustomer";
+import Settings from "./components/Settings";
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="admin/customers/addcustomer" element={<AddCustomer />}/>
             <Route path="admin/products" element={<AdminProduct />} />
             <Route path="admin/orders" element={<AdminOrder />} />
+            <Route path="admin/settings" element={<Settings/>}/>
             <Route path="admin/products/addproduct" element={<AddProduct />} />
             <Route path="admin/products/updateproduct/:id" element={<UpdateProduct />}/>
             <Route path="admin/orders/updateorder/:id" element={<UpdateOrder/>}/>

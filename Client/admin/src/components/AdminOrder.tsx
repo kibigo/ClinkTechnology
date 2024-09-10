@@ -11,6 +11,8 @@ interface OrderItem {
     email:string;
     isDelivered:number;
     isPaid:number;
+    orderDate:string;
+    created_at:string;
 }
 
 
@@ -26,6 +28,12 @@ const AdminOrder:React.FC = () => {
     const [products, setProduct] = useState<OrderItem[]>([]);
 
     const [searchQuery, setSearchQuery] = useState<string>('');
+
+    const [startDate, setStartDate] = useState<string>('');
+
+    const [endDate, setEndDate] = useState<string>('');
+
+    const [statusFilter, setStatusFilter] = useState<string>('');
 
     const jwtToken = getCookie('jwt');
 
@@ -47,16 +55,54 @@ const AdminOrder:React.FC = () => {
                 });
 
                 //const filteredUser = response.data.filter((product: OrderItem) => product.is_delete === 0);
-                const productsAvailable = response.data;
+                let productsAvailable = response.data;
 
-                if (searchQuery === '') {
-                    setProduct(productsAvailable);
-                } else {
-                    const searchUser = productsAvailable.filter((product: OrderItem) =>
-                        product.email.toLowerCase().includes(searchQuery.toLowerCase())
+                if (searchQuery) {
+                    productsAvailable = productsAvailable.filter((product: OrderItem) => 
+                        product.email.toLowerCase().includes(searchQuery.toLowerCase()) || product.id.toString().includes(searchQuery) 
+    
                     );
-                    setProduct(searchUser);
+
+                    // productsAvailable = productsAvailable.filter((product: OrderItem) => 
+                    //     product.id.toString().includes(searchQuery)
+    
+                    // );
                 }
+
+                if(startDate && endDate){
+
+                    const start = new Date(startDate);
+                    const end = new Date(endDate);
+
+                    end.setHours(23, 59, 59, 999);
+
+                    productsAvailable = productsAvailable.filter((product: OrderItem) => {
+                        const productDate = new Date(product.created_at);
+
+                        return productDate >= start && productDate <= end;
+                    });
+                }
+
+
+                if(statusFilter){
+                    productsAvailable = productsAvailable.filter((product: OrderItem) => {
+
+                        if(statusFilter === 'delivered'){
+                            return product.isDelivered === 1;
+                        }else if (statusFilter === 'not delivered'){
+                            return product.isDelivered === 0;
+                        }else if(statusFilter === 'paid'){
+                            return product.isPaid === 1;
+                        }else if(statusFilter === 'not paid'){
+                            return product.isPaid === 0;
+                        }
+
+                        return true;
+                    });
+                }
+
+                setProduct(productsAvailable);
+
             } catch (error) {
                 console.error('Error fetching users:', error);
             } finally {
@@ -65,7 +111,7 @@ const AdminOrder:React.FC = () => {
         };
 
         fetchUsers();
-    }, [searchQuery, jwtToken]);
+    }, [searchQuery, startDate, endDate, statusFilter, jwtToken]);
 
     //pagination
     const totalPages = Math.ceil(products.length / itemsPerPage);
@@ -110,6 +156,26 @@ const AdminOrder:React.FC = () => {
     const handleInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
     };
+
+
+    const handleStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setStartDate(e.target.value);
+    };
+
+    const handleEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEndDate(e.target.value);
+    };
+
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setStatusFilter(e.target.value);
+    };
+
+
+    const formatDate = (dateString: string): string => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
+      
   return (
 
 
@@ -126,16 +192,37 @@ const AdminOrder:React.FC = () => {
                             <h2>Active Orders</h2>
                         </div>
 
-                        <div className='mt-5 mr-5'>
-                            <a href='/admin/addcustomer'>
-                                <button className='bg-blue-600 rounded-md h-10 w-40 text-white'>Add New Customer</button>
-                            </a>
-                        </div>
                     </div>
 
-                    <div className='relative mt-5 ml-5'>
-                        <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
-                        <input type='text' placeholder='Search' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
+
+                    {/* Filters */}
+
+                    <div className='flex gap-10 mt-5 ml-5'>
+
+                        <div className='relative'>
+                            <HiOutlineSearch fontSize={20} className='text-gray-400 absolute top-1/2 -translate-y-1/2 left-3 cursor-pointer'/>
+                            <input type='text' placeholder='Search' value={searchQuery} onChange={handleInputSearch} className='text-sm focus:outline-none active:outline-none h-10 w-[12rem] md:w-[20rem] border border-gray-300 rounded-md px-4 pl-11 pr-4'/>
+                        </div>
+
+                        <span>Start Date</span>
+                        <input type='date' value={startDate} onChange={handleStartDate}  className='text-sm focus:outline-none h-10 w-[12rem] border border-gray-300 rounded-md px-4'/>
+
+                        <span>End Date</span>
+                        <input type='date' value={endDate} onChange={handleEndDate}  className='text-sm focus:outline-none h-10 w-[12rem] border border-gray-300 rounded-md px-4'/>
+
+
+
+                        <select
+                            value={statusFilter}
+                            onChange={handleStatusChange}
+                            className="text-sm focus:outline-none h-10 w-[12rem] border border-gray-300 rounded-md px-4"
+                        >
+                            <option value="">Select Status</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="not-delivered">Not Delivered</option>
+                            <option value="paid">Paid</option>
+                            <option value="not-paid">Not Paid</option>
+                        </select>
                     </div>
 
                     <table className="w-full text-center text-sm font-light text-surface dark:text-white">
@@ -145,10 +232,11 @@ const AdminOrder:React.FC = () => {
                             <tr>
 
                                 <th scope="col" className="px-6 py-4">Order ID</th>
-                                <th scope="col" className="px-6 py-4">Total Price</th>
                                 <th scope="col" className="px-6 py-4">Email</th>
                                 <th scope="col" className="px-6 py-4">Delivery Status</th>
                                 <th scope="col" className="px-6 py-4">Payment Status</th>
+                                <th scope="col" className="px-6 py-4">Total Price</th>
+                                <th scope="col" className="px-6 py-4">Created_at</th>
                                 <th scope="col" className="px-6 py-4">Actions</th>
                             </tr>
 
@@ -158,7 +246,6 @@ const AdminOrder:React.FC = () => {
                             {currentProducts.map((order) => (
                                 <tr key={order.id} className="border-b border-neutral-200 dark:border-white/10">
                                     <td className="whitespace-nowrap px-6 py-4 font-medium">{order.id}</td>
-                                    <td className="whitespace-nowrap px-6 py-4">{order.totalPrice}</td>
                                     <td className="whitespace-nowrap px-6 py-4">{order.email}</td>
                                     <td className="whitespace-nowrap px-6 py-4">
                                         {order.isDelivered == 0 ? 'False' : 'True'}
@@ -166,6 +253,11 @@ const AdminOrder:React.FC = () => {
                                     <td className="whitespace-nowrap px-6 py-4">
                                         {order.isPaid == 0 ? 'False' : 'True'}
                                     </td>
+
+                                    <td className="whitespace-nowrap px-6 py-4">{order.totalPrice}</td>
+
+                                    <td className="whitespace-nowrap px-6 py-4">{formatDate(order.created_at)}</td>
+
                                     <td className="whitespace-nowrap px-6 py-4">
 
                                         <div className="flex gap-8 justify-center">

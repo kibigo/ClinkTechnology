@@ -90,7 +90,7 @@
                     <span>Invoice {{$order[0]->id}}</span> <br>
                     <span>Date: 24 / 09 / 2022</span> <br>
                     <span>Zip code : 560077</span> <br>
-                    <span>Address: #555, Main road, shivaji nagar, Bangalore, India</span> <br>
+                    <span>Address: Nairobi</span> <br>
                 </th>
             </tr>
             <tr class="bg-blue">
@@ -108,7 +108,7 @@
             </tr>
             <tr>
                 <td>Tracking Id/No.:</td>
-                <td>funda-CRheOqspbA</td>
+                <td>CUI#133</td>
 
                 <td>Email Id:</td>
                 <td>{{$order[0]->email}}</td>
@@ -125,7 +125,7 @@
                 <td>Cash on Delivery</td>
 
                 <td>Address:</td>
-                <td>asda asdad asdad adsasd</td>
+                <td>Nairobi</td>
             </tr>
             <tr>
                 <td>Order Status:</td>
@@ -153,28 +153,7 @@
             </tr>
         </thead>
         <tbody>
-            {{-- <tr>
-                <td width="10%">16</td>
-                <td>
-                    Mi Note 7
-                </td>
-                <td width="10%">$14000</td>
-                <td width="10%">1</td>
-                <td width="15%" class="fw-bold">$14000</td>
-            </tr>
-            <tr>
-                <td width="10%">17</td>
-                <td>
-                    Vivo V19
-                </td>
-                <td width="10%">$699</td>
-                <td width="10%">1</td>
-                <td width="15%" class="fw-bold">$699</td>
-            </tr>
-            <tr>
-                <td colspan="4" class="total-heading">Total Amount - <small>Inc. all vat/tax</small> :</td>
-                <td colspan="1" class="total-heading">$14699</td>
-            </tr> --}}
+
 
             @php
                 $totalPrice = 0;

@@ -62,10 +62,10 @@ const AdminCustomers: React.FC = () => {
         fetchUsers();
     }, [searchQuery, jwtToken]);
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString();
-    }
+    const formatDate = (dateString: string): string => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
 
 
     const handleDelete = (id: number) =>{
@@ -97,6 +97,9 @@ const AdminCustomers: React.FC = () => {
     const handleInputSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
     };
+
+
+    
 
   return (
 

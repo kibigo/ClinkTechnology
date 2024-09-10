@@ -33,6 +33,7 @@ Route::group(['middleware' => 'api'], function($router) {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/profile', [UserController::class, 'profile']);
+    Route::post('/editprofile', [UserController::class, 'edit']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/paylater', [MpesaController::class, 'payLater']);
 });
