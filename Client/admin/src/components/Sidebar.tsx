@@ -41,7 +41,7 @@ const Dashboard_Bottom_Links = [
   {
     key:'settings',
     label:'Setting',
-    path:'/settings',
+    path:'/admin/settings',
     icon:<HiOutlineCog/>
   },
   {

@@ -14,15 +14,26 @@ class UserController extends Controller
         return response()->json(auth()->user());
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request)
     {
 
-        $user = User::find($id);
+        $item = auth()->user();
+
+        if(!$item)
+        {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ]);
+        }
+
+        $user = User::find($item->id);
+
+        
 
         $requirements = [
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,' . $item->id,
             'phone_number' => 'required|numeric'
         ];
 
@@ -36,7 +47,7 @@ class UserController extends Controller
 
         if($validate->fails())
         {
-            return response()->json($validate->errors()->toJson());
+            return response()->json($validate->errors());
         }
 
 
@@ -48,22 +59,17 @@ class UserController extends Controller
             $validatedData['password'] = Hash::make($validatedData['password']);
         }
 
+        $user->first_name = $validatedData['first_name'];
+        $user->last_name = $validatedData['last_name'];
+        $user->email = $validatedData['email'];
+        $user->phone_number = $validatedData['phone_number'];
 
-        if($user == auth()->user())
-        {
-            $user->update($validatedData);
+        $user->save();
 
-            return response()->json([
-                'message' => 'Profile updated'
-            ]);
-        }
+        return response()->json([
+            'message' => 'user updated'
+        ]);
 
-        else
-        {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ],403);
-        }
 
     }
 
