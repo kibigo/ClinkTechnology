@@ -3,37 +3,30 @@ import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsiv
 const data = [
   {
     name: 'Page A',
-    Expense: 4000,
     Income: 2400
   },
   {
     name: 'Page B',
-    Expense: 3000,
     Income: 1398,
   },
   {
     name: 'Page C',
-    Expense: 2000,
     Income: 9800
   },
   {
     name: 'Page D',
-    Expense: 2780,
     Income: 3908
   },
   {
     name: 'Page E',
-    Expense: 1890,
     Income: 4800
   },
   {
     name: 'Page F',
-    Expense: 2390,
     Income: 3800
   },
   {
     name: 'Page G',
-    Expense: 3490,
     Income: 4300
   },
 ];
@@ -61,7 +54,7 @@ function Chart() {
             <Tooltip />
             <Legend />
             <Line type="monotone" dataKey="Income" stroke="#8884d8" activeDot={{ r: 8 }} />
-            <Line type="monotone" dataKey="Expense" stroke="#82ca9d" />
+            {/* <Line type="monotone" dataKey="Expense" stroke="#82ca9d" /> */}
           </LineChart>
         </ResponsiveContainer>
       </div>

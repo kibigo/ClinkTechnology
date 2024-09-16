@@ -29,6 +29,7 @@ const AdminCustomers: React.FC = () => {
     const jwtToken = getCookie('jwt');
 
 
+
     useEffect(() => {
 
         const fetchUsers = async () => {
@@ -43,7 +44,8 @@ const AdminCustomers: React.FC = () => {
                 });
 
                 const filteredUser = response.data.filter((user: User) => user.user_type === 1);
-
+                
+                
                 if (searchQuery === '') {
                     setUsers(filteredUser);
                 } else {
