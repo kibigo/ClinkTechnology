@@ -15,6 +15,10 @@ function Header() {
 
   const navigate = useNavigate();
 
+  const handleProfile = () => {
+    navigate('/admin/profile');
+  }
+
 
   const handleLogout = async () => {
     try {
@@ -142,16 +146,8 @@ function Header() {
 
               <Menu.Item>
                 {({ active }) => (
-                  <div className={classNames(active ? 'bg-gray-100' : '', 'text-gray-700 focus:bg-gray-200 block cursor-pointer rounded-sm px-3 py-1')}>
+                  <div onClick={handleProfile} className={classNames(active ? 'bg-gray-100' : '', 'text-gray-700 focus:bg-gray-200 block cursor-pointer rounded-sm px-3 py-1')}>
                     Your Profile
-                  </div>
-                )}
-              </Menu.Item>
-
-              <Menu.Item>
-                {({ active }) => (
-                  <div className={classNames(active ? 'bg-gray-100' : '', 'text-gray-700 focus:bg-gray-200 block cursor-pointer rounded-sm px-3 py-1')}>
-                    Settings
                   </div>
                 )}
               </Menu.Item>

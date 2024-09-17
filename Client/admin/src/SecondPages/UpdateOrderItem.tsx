@@ -80,7 +80,7 @@ function UpdateOrderItem() {
             setLoading(false);
 
         }catch(error: unknown){
-            console.log('Error updating product details', error);
+            //console.log('Error updating product details', error);
             setLoading(false);
 
             if(axios.isAxiosError(error)){
