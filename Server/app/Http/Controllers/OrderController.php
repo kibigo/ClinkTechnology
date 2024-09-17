@@ -189,5 +189,46 @@ class OrderController extends Controller
             'message' => 'Item deleted'
         ]);
     }
+
+
+    public function updateOrderStatus($id)
+    {
+        $order = Order::find($id);
+
+        if(!$order)
+        {
+            return response()->json([
+                'message' => 'Order not found'
+            ]);
+        }
+
+        $status = $order->orderJourney;
+
+        if($status == 0)
+        {
+            $order->orderJourney = 1;
+
+            $order->save();
+
+            return response()->json([
+                'message' => 'Order Updated'
+            ]);
+
+        }
+
+        if($status == 1)
+        {
+            $order->orderJourney = 2;
+
+            $order->save();
+
+            return response()->json([
+                'message' => 'Order Updated'
+            ]);
+
+        }
+
+
+    }
     
 }

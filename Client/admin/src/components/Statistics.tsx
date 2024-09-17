@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { FaArrowTrendUp, FaClockRotateLeft } from "react-icons/fa6";
+import { FaArrowTrendUp, FaClockRotateLeft, FaArrowTrendDown } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa";
 import { HiMiniCube } from "react-icons/hi2";
 import { GoGraph } from "react-icons/go";
@@ -47,6 +47,7 @@ function Statistics() {
   const [order, setOrder] = useState<Order[]>([]);
   const [paid, setPaid] = useState<Order[]>([]);
   const [pendingOrder, setPendingOrder] = useState<Order[]>([]);
+  const [percentUser, setPercentUsers] = useState<number>(Number);
   const [percentOrder, setPercentOrder] = useState<number>(Number);
 
   useEffect(() => {
@@ -88,15 +89,18 @@ function Statistics() {
         let initial = 0;
 
         initial += createdToday.length - createdYesterday.length;
-        const result = parseInt(((createdToday.length / initial)*100).toFixed());
+        let result = parseInt(((createdToday.length / initial)*100).toFixed());
         
-        setPercentOrder(result);
+        if(isNaN(result)){
+          result = 0;
+          setPercentUsers(result);
+        }
+        setPercentUsers(result);
         
-        console.log('Users created today: ', result);
 
 
     } catch (error) {
-        console.error('Error fetching users:', percentOrder);
+        console.error('Error fetching users:', percentUser);
     } 
     }
 
@@ -114,10 +118,53 @@ function Statistics() {
                 Authorization: `Bearer ${jwtToken}`
             }
         });
-        
-        setOrder(response.data);
 
-        const paidOrders = response.data.filter((order: Order) => order.isPaid == 0);
+        const todayOrders = response.data.filter((order: Order) => {
+          const todayDate = new Date();
+          const orderDate = new Date(order.created_at);
+
+          return (
+            orderDate.getDate() == todayDate.getDate() &&
+            orderDate.getMonth() == todayDate.getMonth() &&
+            orderDate.getFullYear() == todayDate.getFullYear()
+          )
+        });
+        
+        setOrder(todayOrders);
+
+        const yesterdayOrders = response.data.filter((order: Order) => {
+          const todayDate = new Date();
+          const orderDate = new Date(order.created_at);
+
+          return (
+            orderDate.getDate() == todayDate.getDate()-1 &&
+            orderDate.getMonth() == todayDate.getMonth()-1 &&
+            orderDate.getFullYear() == todayDate.getFullYear()
+          )
+        });
+
+        let initial = 0;
+
+        initial += todayOrders.length - yesterdayOrders.length;
+        let result = parseInt(((todayOrders.length / initial)*100).toFixed());
+        
+        if(isNaN(result)){
+          result = 0;
+          setPercentOrder(result);
+        }
+        setPercentOrder(result);
+
+        const paidOrders = response.data.filter((order: Order) => {
+          const todayDate = new Date()
+          const orderDate = new Date(order.created_at);
+
+          return(
+            order.isPaid == 0 &&
+            orderDate.getDate() == todayDate.getDate() &&
+            orderDate.getMonth() == todayDate.getMonth() &&
+            orderDate.getFullYear() == todayDate.getFullYear()
+          );
+        });
         setPaid(paidOrders);
 
         const pendingOrders = response.data.filter((order: Order) => order.isPaid == 1);
@@ -144,13 +191,32 @@ function Statistics() {
 
           <div className="mt-1 flex-col">
             <div className="flex">
-              <FaArrowTrendUp fontSize={20} className="text-green-500"/>
-              <span className="ml-3 text-green-600">
-                {percentOrder < 0 ? '' : `${percentOrder}%`}
-              </span>
-            </div>
-            <div>
-              <span className="text-black">Up from yesterday</span>
+
+              {percentUser == 0 ? '': 
+              percentUser < 0 ? (
+                <>
+                  <FaArrowTrendDown fontSize={20} className="text-green-500"/>
+                  <span className="ml-3 text-green-600">
+                    {percentUser}
+                  </span>
+
+                  <div>
+                    <span className="text-black">Up from yesterday</span>
+                  </div>
+                </>
+              ): 
+
+              <>
+                  <FaArrowTrendUp fontSize={20} className="text-green-500"/>
+                  <span className="ml-3 text-green-600">
+                    {`${percentUser}%`}
+                  </span>
+
+                  <div>
+                    <span className="text-black">Up from yesterday</span>
+                  </div>
+              </>
+              }
             </div>
 
           </div>
@@ -163,7 +229,7 @@ function Statistics() {
 
       <Boxwrapper>
         <div className="flex flex-1 flex-col ml-5">
-          <span className="text-sm text-gray-500 font-light">Total Order</span>
+          <span className="text-sm text-gray-500 font-light">Today's Order</span>
 
           <div className="flex-col mt-1">
             <strong className="text-3xl">{order.length}</strong>
@@ -171,11 +237,29 @@ function Statistics() {
 
           <div className="mt-1 flex-col">
             <div className="flex">
-              <FaArrowTrendUp fontSize={20} className="text-green-500"/>
-              <span className="ml-3 text-green-600">8.5% </span>
-            </div>
-            <div>
-              <span className="text-black">Up from yesterday</span>
+            {percentOrder == 0 ? '': 
+              percentOrder < 0 ? (
+                <>
+                  <FaArrowTrendDown fontSize={20} className="text-green-500"/>
+                  <span className="ml-3 text-green-600">
+                    {percentOrder}
+                  </span>
+                  <div>
+                    <span className="text-black">Up from yesterday</span>
+                  </div>
+                </>
+              ): 
+
+              <>
+                  <FaArrowTrendUp fontSize={20} className="text-green-500"/>
+                  <span className="ml-3 text-green-600">
+                    {`${percentOrder}%`}
+                  </span>
+                  <div>
+                    <span className="text-black">Up from yesterday</span>
+                  </div>
+              </>
+              }
             </div>
 
           </div>
@@ -223,12 +307,12 @@ function Statistics() {
 
           <div className="mt-1 flex-col">
             <div className="flex">
-              <FaArrowTrendUp fontSize={20} className="text-green-500"/>
-              <span className="ml-3 text-green-600">1.8% </span>
+              {/* <FaArrowTrendUp fontSize={20} className="text-green-500"/>
+              <span className="ml-3 text-green-600">1.8% </span> */}
             </div>
-            <div>
+            {/* <div>
               <span className="text-black">Up from yesterday</span>
-            </div>
+            </div> */}
 
           </div>
         </div>

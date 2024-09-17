@@ -73,6 +73,8 @@ Route::group(['middleware' => ['api', 'admin']], function() {
     Route::get('orderitem/{id}', [OrderController::class, 'singleItem']);
     Route::post('updateorderitem/{id}', [OrderController::class, 'updateSingleItem']);
     Route::delete('deleteorderitem/{id}', [OrderController::class, 'deleteOrderItem']);
+    //update order status
+    Route::post('updateorderstatus/{id}', [OrderController::class, 'updateOrderStatus']);
 
     //Shipment
     Route::get('shipment/{id}', [ShipmentController::class, 'getShipment']);

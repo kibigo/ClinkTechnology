@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import {HiOutlineSearch } from 'react-icons/hi'
+import { BiX } from 'react-icons/bi';
+import { TiTick } from 'react-icons/ti';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getCookie } from 'typescript-cookie';
@@ -11,6 +13,7 @@ interface OrderItem {
     email:string;
     isDelivered:number;
     isPaid:number;
+    orderJourney:number;
     orderDate:string;
     created_at:string;
 }
@@ -37,79 +40,81 @@ const AdminOrder:React.FC = () => {
 
     const jwtToken = getCookie('jwt');
 
+
     //Pagination
     const [currentPage, setCurrentPage] = useState<number>(1);
     const[itemsPerPage] = useState<number>(10);    
 
-    useEffect(() => {
 
-        const fetchUsers = async () => {
+    const fetchUsers = async () => {
 
-            setLoading(true);
+        setLoading(true);
 
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/orders', {
-                    headers: {
-                        Authorization: `Bearer ${jwtToken}`
-                    }
-                });
-
-                //const filteredUser = response.data.filter((product: OrderItem) => product.is_delete === 0);
-                let productsAvailable = response.data;
-
-                if (searchQuery) {
-                    productsAvailable = productsAvailable.filter((product: OrderItem) => 
-                        product.email.toLowerCase().includes(searchQuery.toLowerCase()) || product.id.toString().includes(searchQuery) 
-    
-                    );
-
-                    // productsAvailable = productsAvailable.filter((product: OrderItem) => 
-                    //     product.id.toString().includes(searchQuery)
-    
-                    // );
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/api/orders', {
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
                 }
+            });
 
-                if(startDate && endDate){
+            //const filteredUser = response.data.filter((product: OrderItem) => product.is_delete === 0);
+            let productsAvailable = response.data;
 
-                    const start = new Date(startDate);
-                    const end = new Date(endDate);
+            if (searchQuery) {
+                productsAvailable = productsAvailable.filter((product: OrderItem) => 
+                    product.email.toLowerCase().includes(searchQuery.toLowerCase()) || product.id.toString().includes(searchQuery) 
 
-                    end.setHours(23, 59, 59, 999);
+                );
 
-                    productsAvailable = productsAvailable.filter((product: OrderItem) => {
-                        const productDate = new Date(product.created_at);
+                // productsAvailable = productsAvailable.filter((product: OrderItem) => 
+                //     product.id.toString().includes(searchQuery)
 
-                        return productDate >= start && productDate <= end;
-                    });
-                }
-
-
-                if(statusFilter){
-                    productsAvailable = productsAvailable.filter((product: OrderItem) => {
-
-                        if(statusFilter === 'delivered'){
-                            return product.isDelivered === 1;
-                        }else if (statusFilter === 'not delivered'){
-                            return product.isDelivered === 0;
-                        }else if(statusFilter === 'paid'){
-                            return product.isPaid === 1;
-                        }else if(statusFilter === 'not paid'){
-                            return product.isPaid === 0;
-                        }
-
-                        return true;
-                    });
-                }
-
-                setProduct(productsAvailable);
-
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            } finally {
-                setLoading(false);
+                // );
             }
-        };
 
+            if(startDate && endDate){
+
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                end.setHours(23, 59, 59, 999);
+
+                productsAvailable = productsAvailable.filter((product: OrderItem) => {
+                    const productDate = new Date(product.created_at);
+
+                    return productDate >= start && productDate <= end;
+                });
+            }
+
+
+            if(statusFilter){
+                productsAvailable = productsAvailable.filter((product: OrderItem) => {
+
+                    if(statusFilter === 'delivered'){
+                        return product.isDelivered === 1;
+                    }else if (statusFilter === 'not delivered'){
+                        return product.isDelivered === 0;
+                    }else if(statusFilter === 'paid'){
+                        return product.isPaid === 1;
+                    }else if(statusFilter === 'not paid'){
+                        return product.isPaid === 0;
+                    }
+
+                    return true;
+                });
+            }
+
+            setProduct(productsAvailable);
+
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    useEffect(() => {
         fetchUsers();
     }, [searchQuery, startDate, endDate, statusFilter, jwtToken]);
 
@@ -124,6 +129,43 @@ const AdminOrder:React.FC = () => {
     const startIndex = (currentPage -1 ) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = products.slice(startIndex, endIndex);
+
+
+    const handleOrderUpdate = (id: number) => {
+
+        setLoading(true);
+
+        axios.post(`http://127.0.0.1:8000/api/updateorderstatus/${id}`, {}, {
+            headers: {
+                Authorization : `Bearer ${jwtToken}`
+            }
+        })
+        .then((response) => {
+
+            Swal.fire({
+                title:'Update',
+                text:response.data.message,
+                icon:'success'
+            });
+
+            fetchUsers();
+        })
+        .catch((error) => {
+            if(axios.isAxiosError(error)){
+
+                Swal.fire({
+                    title:'Update',
+                    text:error.response?.data.message,
+                    icon:'success'
+                });
+            }
+        })
+        .finally(() => {
+            setLoading(false);
+            
+        })
+
+    };
 
 
 
@@ -235,8 +277,10 @@ const AdminOrder:React.FC = () => {
                                 <th scope="col" className="px-6 py-4">Email</th>
                                 <th scope="col" className="px-6 py-4">Delivery Status</th>
                                 <th scope="col" className="px-6 py-4">Payment Status</th>
+                                <th scope="col" className="px-6 py-4">Order Journey</th>
                                 <th scope="col" className="px-6 py-4">Total Price</th>
                                 <th scope="col" className="px-6 py-4">Created_at</th>
+                                <th scope="col" className="px-6 py-4">Order Status</th>
                                 <th scope="col" className="px-6 py-4">Actions</th>
                             </tr>
 
@@ -248,15 +292,54 @@ const AdminOrder:React.FC = () => {
                                     <td className="whitespace-nowrap px-6 py-4 font-medium">{order.id}</td>
                                     <td className="whitespace-nowrap px-6 py-4">{order.email}</td>
                                     <td className="whitespace-nowrap px-6 py-4">
-                                        {order.isDelivered == 0 ? 'False' : 'True'}
+                                        {
+                                            order.isDelivered == 0 ? (
+                                                <div className='flex items-center justify-center'>
+                                                    <BiX fontSize={35} className='text-red-500'/>
+                                                </div>
+                                            ) : (
+                                                <div className='flex items-center justify-center'>
+                                                    <TiTick fontSize={35} className='text-green-500'/>
+                                                </div>
+                                            )
+                                        }
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4">
-                                        {order.isPaid == 0 ? 'False' : 'True'}
+                                        {
+                                            order.isPaid == 0 ? (
+                                                <div className='flex items-center justify-center'>
+                                                    <BiX fontSize={35} className='text-red-500'/>
+                                                </div>
+                                            ) : (
+                                                <div className='flex items-center justify-center'>
+                                                    <TiTick fontSize={35} className='text-green-500'/>
+                                                </div>
+                                            )
+                                        }
+                                    </td>
+
+                                    <td className="whitespace-nowrap px-6 py-4">
+                                        {
+                                            order.orderJourney == 0 ? (
+                                                <p className='font-semibold'>Received</p>
+                                            ) : 
+                                            order.orderJourney == 1 ? (
+                                                <p className='font-semibold'>Processing</p>
+                                            ) :
+                                            order.orderJourney == 2 ? (
+                                                <p className='font-semibold'>Shipping</p>
+                                            ) : ''
+                                        }
                                     </td>
 
                                     <td className="whitespace-nowrap px-6 py-4">{order.totalPrice}</td>
 
                                     <td className="whitespace-nowrap px-6 py-4">{formatDate(order.created_at)}</td>
+
+
+                                    <td className="whitespace-nowrap px-6 py-4">
+                                        <button onClick={() => handleOrderUpdate(order.id)} className='text-center bg-blue-500 text-black w-32 h-8 rounded-md'>Change Status</button>
+                                    </td>
 
                                     <td className="whitespace-nowrap px-6 py-4">
 

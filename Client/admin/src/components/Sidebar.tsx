@@ -44,12 +44,12 @@ const Dashboard_Bottom_Links = [
     path:'/admin/settings',
     icon:<HiOutlineCog/>
   },
-  {
-    key:'support',
-    label:'Help & Support',
-    path:'/support',
-    icon:<HiOutlineQuestionMarkCircle/>
-  }
+  // {
+  //   key:'support',
+  //   label:'Help & Support',
+  //   path:'/support',
+  //   icon:<HiOutlineQuestionMarkCircle/>
+  // }
 ]
 
 function Sidebar() {
