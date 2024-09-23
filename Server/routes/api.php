@@ -8,6 +8,7 @@ use App\Http\Controllers\MpesaController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -85,6 +86,9 @@ Route::group(['middleware' => ['api', 'admin']], function() {
     
     //delete orderItem, admin editing
     Route::post('deleteOrderItem/{itemId}', [OrderController::class, 'delete']);
+
+    //get all reviews
+    Route::get('/getreviews', [ReviewController::class, 'getReviews']);
     
 });
 
@@ -105,6 +109,9 @@ Route::get('/getregion', [RegionController::class, 'getRegion']);
 
 //destination
 Route::get('/alldestination', [DestinationController::class, 'allDestination']);
+
+//reviews
+Route::post('/addreview', [ReviewController::class, 'createReview']);
 
 
 //pay later
