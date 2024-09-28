@@ -89,6 +89,8 @@ Route::group(['middleware' => ['api', 'admin']], function() {
 
     //get all reviews
     Route::get('/getreviews', [ReviewController::class, 'getReviews']);
+    //approve a review
+    Route::post('approvereview/{id}', [ReviewController::class, 'approveReview']);
     
 });
 
@@ -110,8 +112,9 @@ Route::get('/getregion', [RegionController::class, 'getRegion']);
 //destination
 Route::get('/alldestination', [DestinationController::class, 'allDestination']);
 
-//reviews
+//add reviews
 Route::post('/addreview', [ReviewController::class, 'createReview']);
+Route::get('allapproved', [ReviewController::class, 'getApprovedReviews']);
 
 
 //pay later
