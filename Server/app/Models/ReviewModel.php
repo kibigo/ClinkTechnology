@@ -28,4 +28,12 @@ class ReviewModel extends Model
                     ->where('isDelete', '=', 0)
                     ->get();
     }
+
+    static public function getToCustomers()
+    {
+        return self::select('reviews.*')
+                    ->where('isDelete', '=', 0)
+                    ->where('isApproved', '=', 1)
+                    ->get();
+    }
 }

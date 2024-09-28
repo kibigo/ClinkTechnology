@@ -25,8 +25,9 @@ class Product extends Model
 
     static public function getProduct()
     {
-        $return = self::select('products.*', 'images.path as image_url')
+        $return = self::select('products.*', 'images.path as image_url', 'reviews.rating as rating', 'reviews.comment as comment')
                             ->join('images', 'images.product_id', 'products.id')
+                            ->leftJoin('reviews', 'reviews.productId', 'products.id')
                             ->where('products.is_delete', '=', 0)
                             ->get();
         $formattedProducts = $return->groupBy('id')->map(function($productGroup){

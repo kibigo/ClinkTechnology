@@ -37,7 +37,7 @@ class UserController extends Controller
             'phone_number' => 'required|numeric'
         ];
 
-        if($request->filled('passwoard'))
+        if($request->filled('password'))
         {
             $requirements['password'] = 'min:8|confirmed|string';
         }
